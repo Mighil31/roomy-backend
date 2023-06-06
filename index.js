@@ -1,8 +1,12 @@
-const express = require("express");
+import express from "express";
+import Post from "./routes/Post.js";
+import User from "./routes/User.js";
 
 const app = express();
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Running on port ${port}`);
+app.use("/post", Post);
+app.use("/user", User);
+
+app.listen(5000, () => {
+  console.log(`App listening on port 5000!`);
 });
