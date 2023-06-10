@@ -10,6 +10,10 @@ class UserRepository {
     return db.query("SELECT * FROM users WHERE userID = ?", [id]);
   }
 
+  async getUserByEmail(email) {
+    return db.query("SELECT * FROM users WHERE email = ?", [email]);
+  }
+
   async createUser(user) {
     return db.query("INSERT INTO users SET ?", user);
   }
