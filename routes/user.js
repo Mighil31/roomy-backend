@@ -59,7 +59,6 @@ router.post(
 
     try {
       const [rows, field] = await UserRepository.createUser(user);
-      console.log(rows);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ errors: [{ msg: "Database issue" }] });
