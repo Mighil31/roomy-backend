@@ -40,18 +40,22 @@ export const createUser = async (req, res, next) => {
 
   user.password = await bcrypt.hash(req.body.password, salt);
 
+  let payload = {};
+
   try {
     const [rows, field] = await UserRepository.createUser(user);
+
+    payload = {
+      user: {
+        userId: rows.insertId,
+      },
+    };
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
   }
 
-  const payload = {
-    user: {
-      userID: user.userID,
-    },
-  };
+  
 
   jsonwebtoken.sign(
     payload,
@@ -98,10 +102,10 @@ export const loginUser = async (req, res, next) => {
 
     const payload = {
       user: {
-        userID: user[0].userID,
+        userId: user[0].userId,
       },
     };
-    
+
     jsonwebtoken.sign(
       payload,
       process.env.JWT_SECRET,
@@ -115,5 +119,15 @@ export const loginUser = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
+  }
+}
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const [user, userField] = await UserRepository.getUserById(req.user.userId);
+    return res.json(user[0]);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Error in /api/auth route" });
   }
 }

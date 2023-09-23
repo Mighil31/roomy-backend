@@ -2,7 +2,6 @@ import db from "../utils/database.js";
 
 class UserRepository {
   async getUsers() {
-    console.log("In UserRepository");
     return db.query("SELECT * FROM users");
   }
 
