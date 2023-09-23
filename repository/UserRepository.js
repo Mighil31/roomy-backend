@@ -7,7 +7,7 @@ class UserRepository {
   }
 
   async getUserById(id) {
-    return db.query("SELECT email, userID, name FROM users WHERE userID = ?", [
+    return db.query("SELECT email, userId, name FROM users WHERE userId = ?", [
       id,
     ]);
   }
