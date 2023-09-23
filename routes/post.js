@@ -1,10 +1,7 @@
 import { Router } from "express";
+import { createPost } from "../controllers/post.js";
 const router = Router();
 
-router.post("/", async (req, res) => {
-  return res.json({
-    ok: "ok",
-  });
-});
+router.post("/", createPost);
 
 export default router;
