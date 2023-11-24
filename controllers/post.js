@@ -34,6 +34,18 @@ export const createPost = async (req, res) => {
     const [rows, field] = await PostRepository.createPost(post);
     return res.status(201).json(post);
   } catch (error) {
-    return res.status(500).json({ errors: [{ msg: "Database issue" }] });
+    return res.status(500).json({ errors: [{ msg: "Database issue", err: error }] });
   }
 };
+
+export const getPosts = async (req, res) => {
+  try {
+    const [rows, field] = await PostRepository.getPosts();
+    console.log(rows);
+    return res.status(201).json(rows);
+  } catch (error) {
+    
+  }
+}
+
+

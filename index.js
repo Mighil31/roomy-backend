@@ -2,7 +2,7 @@ import express from "express";
 import Post from "./routes/post.js";
 import User from "./routes/user.js";
 import Auth from "./routes/auth.js";
-
+import cors from "cors";
 const app = express();
 
 app.use(express.json({ extended: false }));
@@ -15,6 +15,8 @@ app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
+
+app.use(cors())
 
 app.use("/api/post", Post);
 app.use("/api/user", User);

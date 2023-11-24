@@ -4,10 +4,13 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 
 export const validateRegistrationUser = [
-    check('name', 'Name is required').not().isEmpty(),
-    check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
-  ];
+  check("name", "Name is required").not().isEmpty(),
+  check("email", "Please include a valid email").isEmail(),
+  check(
+    "password",
+    "Please enter a password with 6 or more characters"
+  ).isLength({ min: 6 }),
+];
 
 export const createUser = async (req, res, next) => {
   const errors = validationResult(req);
@@ -24,12 +27,10 @@ export const createUser = async (req, res, next) => {
 
   try {
     const [userByEmail, userByEmailFields] =
-    await UserRepository.getUserByEmail(user.email);
+      await UserRepository.getUserByEmail(user.email);
 
     if (userByEmail.length > 0) {
-    return res
-      .status(400)
-      .json({ errors: [{ msg: "User already exists" }] });
+      return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
   } catch (error) {
     console.log(error);
@@ -50,24 +51,41 @@ export const createUser = async (req, res, next) => {
         userId: rows.insertId,
       },
     };
+
+    const accessToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "30s",
+    });
+
+    const refreshToken = jsonwebtoken.sign(
+      payload,
+      process.env.REFRESH_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    await UserRepository.addRefreshToken(refreshToken, user[0].userId);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
   }
 
-  
+  res.cookie("jwt", refreshToken, {
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+  res.json({ accessToken });
 
-  jsonwebtoken.sign(
-    payload,
-    process.env.JWT_SECRET,
-    { expiresIn: 360000 },
-    (err, token) => {
-      if (err)
-        return res.status(500).json({ errors: [{ msg: "JWT Issue" }] });
-      res.json({ token });
-    }
-  );
-}
+  // jsonwebtoken.sign(
+  //   payload,
+  //   process.env.JWT_SECRET,
+  //   { expiresIn: 360000 },
+  //   (err, token) => {
+  //     if (err) return res.status(500).json({ errors: [{ msg: "JWT Issue" }] });
+  //     res.json({ token });
+  //   }
+  // );
+};
 
 export const validateLoginUser = [
   check("email", "Please include a valid email").isEmail(),
@@ -88,16 +106,12 @@ export const loginUser = async (req, res, next) => {
       email
     );
     if (user.length == 0) {
-      return res
-        .status(400)
-        .json({ errors: [{ msg: "Invalid Credentials" }] });
+      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
 
     const isMatch = await bcrypt.compare(password, user[0].password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ errors: [{ msg: "Invalid Credentials" }] });
+      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
 
     const payload = {
@@ -106,21 +120,40 @@ export const loginUser = async (req, res, next) => {
       },
     };
 
-    jsonwebtoken.sign(
+    const accessToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "30s",
+    });
+
+    const refreshToken = jsonwebtoken.sign(
       payload,
-      process.env.JWT_SECRET,
-      { expiresIn: 360000 },
-      (err, token) => {
-        if (err)
-          return res.status(500).json({ errors: [{ msg: "JWT Issue" }] });
-        res.json({ token });
+      process.env.REFRESH_SECRET,
+      {
+        expiresIn: "1d",
       }
     );
+
+    await UserRepository.addRefreshToken(refreshToken, user[0].userId);
+
+    // jsonwebtoken.sign(
+    //   payload,
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: "30s" },
+    //   (err, token) => {
+    //     if (err)
+    //       return res.status(500).json({ errors: [{ msg: "JWT Issue" }] });
+    //     res.json({ token });
+    //   }
+    // );
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.json({ accessToken });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
   }
-}
+};
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -130,4 +163,4 @@ export const getCurrentUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: "Error in /api/auth route" });
   }
-}
+};

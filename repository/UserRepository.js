@@ -20,7 +20,14 @@ class UserRepository {
   }
 
   async updateUser(id, user) {
-    return db.query("UPDATE users SET ? WHERE id = ?", [user, id]);
+    return db.query("UPDATE users SET ? WHERE userId = ?", [user, id]);
+  }
+
+  async addRefreshToken(token, id) {
+    return db.query("UPDATE users SET refresh_token = ? WHERE userId = ?", [
+      token,
+      id,
+    ]);
   }
 
   async deleteUser(id) {
