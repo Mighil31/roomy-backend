@@ -5,7 +5,11 @@ import auth from "../middleware/auth.js";
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
-import { validateLoginUser, loginUser, getCurrentUser} from "../controllers/user.js";
+import {
+  validateLoginUser,
+  loginUser,
+  getCurrentUser,
+} from "../controllers/userController.js";
 
 const router = Router();
 
