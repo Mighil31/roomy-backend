@@ -3,6 +3,7 @@ import jsonwebtoken from "jsonwebtoken";
 export default (req, res, next) => {
   const token = req.header("x-auth-token");
   if (!token) {
+    console.log("NO TOKEN");
     return res.status(401).json({ msg: "Authorization denied, no token" });
   }
 
@@ -11,6 +12,7 @@ export default (req, res, next) => {
     req.user = decoded.user;
     next();
   } catch (error) {
+    console.log("Invalid");
     res.status(401).json({ msg: "Token is invalid" });
   }
 };

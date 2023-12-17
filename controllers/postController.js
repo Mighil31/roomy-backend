@@ -1,6 +1,7 @@
 import PostRepository from "../repository/PostRepository.js";
 
 export const createPost = async (req, res) => {
+  // console.log(req.user);
   const {
     gender,
     address1,
@@ -17,6 +18,7 @@ export const createPost = async (req, res) => {
 
   // Create a post object
   const post = {
+    userId: req.user.userId,
     gender,
     address1,
     address2,
@@ -29,6 +31,7 @@ export const createPost = async (req, res) => {
     rent,
     postBody,
   };
+  // console.log(post);
 
   try {
     const [rows, field] = await PostRepository.createPost(post);
@@ -40,10 +43,12 @@ export const createPost = async (req, res) => {
   }
 };
 
-export const getPosts = async (req, res) => {
+export const getFeed = async (req, res) => {
   try {
-    const [rows, field] = await PostRepository.getPosts();
-    // console.log(rows);
+    // console.log("Get feed");
+    const [rows, field] = await PostRepository.getFeed();
+    // console.log("rows");
+
     return res.status(201).json(rows);
   } catch (error) {}
 };

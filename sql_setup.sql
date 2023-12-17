@@ -6,7 +6,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE posts (
-  post_id INT AUTO_INCREMENT PRIMARY KEY,
+  userId int NOT NULL,
+  postID INT AUTO_INCREMENT PRIMARY KEY,
   gender ENUM('male', 'female', 'any') NOT NULL,
   address1 VARCHAR(255) NOT NULL,
   address2 VARCHAR(255),
@@ -18,5 +19,7 @@ CREATE TABLE posts (
   noOfFilledRoommates INT NOT NULL DEFAULT 0,
   size ENUM('1bhk', '2bhk', '3bhk', '4bhk', '5bhk', 'Other') NOT NULL,
   rent DECIMAL(10, 2) NOT NULL,
-  postBody TEXT NOT NULL
+  postBody TEXT NOT NULL,
+  postDate DATE DEFAULT (CURRENT_DATE)
+  FOREIGN KEY (userId) REFERENCES users(id)
 );

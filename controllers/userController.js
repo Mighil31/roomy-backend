@@ -53,18 +53,18 @@ export const createUser = async (req, res, next) => {
     };
 
     const accessToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "30s",
+      expiresIn: "1d",
     });
 
     const refreshToken = jsonwebtoken.sign(
       payload,
       process.env.REFRESH_SECRET,
       {
-        expiresIn: "1d",
+        expiresIn: "5d",
       }
     );
 
-    await UserRepository.addRefreshToken(refreshToken, user[0].userId);
+    await UserRepository.addRefreshToken(refreshToken, rows[0].userId);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
@@ -94,11 +94,12 @@ export const validateLoginUser = [
 
 export const loginUser = async (req, res, next) => {
   const errors = validationResult(req);
-
+  // console.log(req.body);
   if (!errors.isEmpty()) {
+    console.log("First error");
     return res.status(400).json({ errors: errors.array() });
   }
-
+  // console.log(req.body);
   const { email, password } = req.body;
 
   try {
@@ -150,7 +151,7 @@ export const loginUser = async (req, res, next) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ accessToken });
+    res.json({ accessToken, userId: user[0].userId, username: user[0].name });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
