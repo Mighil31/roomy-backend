@@ -7,7 +7,7 @@ class PostRepository {
 
   async getFeed() {
     return db.query(
-      "SELECT posts.userId, name, postDate, postId, gender, address1, address2, city, state, country, pincode, noOfRoommates, size, rent, postBody FROM posts, users where posts.userId = users.userId"
+      "SELECT posts.userId, name, postDate, postId, gender, address1, address2, city,noOfFilledRoommates, state, country, pincode, noOfRoommates, size, rent, postBody FROM posts, users where posts.userId = users.userId"
     );
   }
 
