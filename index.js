@@ -6,9 +6,12 @@ import cors from "cors";
 import Refresh from "./routes/refresh.js";
 import cookieParser from "cookie-parser";
 import Logout from "./routes/logout.js";
+import initializeSocket from "./utils/sockets.js";
 const app = express();
 
 app.use(express.json({ extended: false }));
+
+const io = initializeSocket(server);
 
 // CORS
 app.use(function (req, res, next) {
