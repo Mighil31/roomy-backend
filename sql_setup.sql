@@ -1,8 +1,9 @@
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL
+  password VARCHAR(255) NOT NULL,
+  refresh_token VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE posts (
@@ -20,6 +21,6 @@ CREATE TABLE posts (
   size ENUM('1bhk', '2bhk', '3bhk', '4bhk', '5bhk', 'Other') NOT NULL,
   rent DECIMAL(10, 2) NOT NULL,
   postBody TEXT NOT NULL,
-  postDate DATE DEFAULT (CURRENT_DATE)
-  FOREIGN KEY (userId) REFERENCES users(id)
+  postDate DATE DEFAULT (CURRENT_DATE),
+  FOREIGN KEY (userId) REFERENCES users(userId)
 );
