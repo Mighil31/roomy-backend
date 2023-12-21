@@ -45,7 +45,7 @@ export const createUser = async (req, res, next) => {
 
   try {
     const [rows, field] = await UserRepository.createUser(user);
-
+    console.log(rows);
     payload = {
       user: {
         userId: rows.insertId,
@@ -53,28 +53,30 @@ export const createUser = async (req, res, next) => {
     };
 
     const accessToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "500s",
     });
 
     const refreshToken = jsonwebtoken.sign(
       payload,
       process.env.REFRESH_SECRET,
       {
-        expiresIn: "5d",
+        expiresIn: "1d",
       }
     );
 
-    await UserRepository.addRefreshToken(refreshToken, rows[0].userId);
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.json({ accessToken });
+
+    await UserRepository.addRefreshToken(refreshToken, rows.insertId);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
   }
-
-  res.cookie("jwt", refreshToken, {
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-  res.json({ accessToken });
 
   // jsonwebtoken.sign(
   //   payload,
@@ -151,7 +153,7 @@ export const loginUser = async (req, res, next) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ accessToken, userId: user[0].userId, username: user[0].name });
+    res.json({ accessToken });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });

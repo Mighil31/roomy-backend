@@ -13,6 +13,7 @@ export default (req, res, next) => {
     next();
   } catch (error) {
     console.log("Invalid");
+    console.log(error);
     res.status(401).json({ msg: "Token is invalid" });
   }
 };
