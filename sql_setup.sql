@@ -24,3 +24,26 @@ CREATE TABLE posts (
   postDate DATE DEFAULT (CURRENT_DATE),
   FOREIGN KEY (userId) REFERENCES users(userId)
 );
+
+-- Table to store conversations
+CREATE TABLE conversations (
+    conversationId INT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    user1_id INT NOT NULL,
+    user2_id INT NOT NULL,
+
+    FOREIGN KEY (user1_id) REFERENCES users(userId),
+    FOREIGN KEY (user2_id) REFERENCES users(userId)
+);
+
+CREATE TABLE messages (
+    messageId INT PRIMARY KEY AUTO_INCREMENT,
+    conversationId INT NOT NULL,
+    senderId INT NOT NULL,
+    content TEXT,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (conversationId) REFERENCES conversations(conversationId),
+    FOREIGN KEY (senderId) REFERENCES users(userId)
+);

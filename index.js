@@ -6,9 +6,11 @@ import cors from "cors";
 import Refresh from "./routes/refresh.js";
 import cookieParser from "cookie-parser";
 import Logout from "./routes/logout.js";
+import Chat from "./routes/chat.js";
 import initializeSocket from "./utils/sockets.js";
+import http from "http";
 const app = express();
-
+const server = http.createServer(app);
 app.use(express.json({ extended: false }));
 
 const io = initializeSocket(server);
@@ -36,6 +38,7 @@ app.use("/api/user", User);
 app.use("/api/auth", Auth);
 app.use("/api/refresh", Refresh);
 app.use("/api/logout", Logout);
+app.use("/api/chat", Chat);
 
 app.listen(5000, () => {
   console.log(`App listening on port 5000!`);
