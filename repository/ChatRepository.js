@@ -30,8 +30,8 @@ class ChatRepository {
 
   async getConversationList(userId) {
     return db.query(
-      `SELECT u.userId, u.name FROM users u WHERE u.userId IN (SELECT c.user1_id FROM conversations c WHERE ` +
-        `c.user2_id = ${userId} UNION SELECT c.user2_id FROM conversations c WHERE c.user1_id = ${userId} ) ORDER BY u.name;`
+      `SELECT u.userId, u.name, c.conversationId FROM users u JOIN conversations c ON u.userId = CASE WHEN c.user1_id = ${userId}` +
+        ` THEN c.user2_id WHEN c.user2_id = ${userId} THEN c.user1_id END;`
     );
   }
 

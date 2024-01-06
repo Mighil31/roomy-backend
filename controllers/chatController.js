@@ -67,7 +67,9 @@ export const createMessage = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   try {
-    const [rows, field] = await ChatRepository.getMessages(req.user.userId);
+    const [row, field] = await ChatRepository.getMessages(
+      req.params.conversationId
+    );
     return res.status(201).json(row);
   } catch (error) {
     return res

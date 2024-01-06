@@ -5,6 +5,7 @@ import {
   createConversations,
   createMessage,
   getConversationList,
+  getMessages,
 } from "../controllers/chatController.js";
 const router = Router();
 
@@ -15,5 +16,6 @@ router.get("/list", auth, getConversationList);
 
 router.post("/", auth, createConversations);
 router.post("/message/:conversationId", auth, createMessage);
+router.get("/message/:conversationId", auth, getMessages);
 
 export default router;
