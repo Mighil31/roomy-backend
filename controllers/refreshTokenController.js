@@ -18,12 +18,12 @@ export const handleRefreshToken = async (req, res, next) => {
         .status(403)
         .json({ errors: [{ msg: "Invalid refresh token" }] });
     }
-    console.log(user);
+    // console.log(user);
     jsonwebtoken.verify(
       refreshToken,
       process.env.REFRESH_SECRET,
       (err, decoded) => {
-        console.log(decoded);
+        // console.log(decoded);
         if (err || user[0].userId != decoded.user.userId)
           return res.sendStatus(403);
         const payload = {

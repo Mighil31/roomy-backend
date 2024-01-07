@@ -33,7 +33,7 @@ export const createUser = async (req, res, next) => {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
   }
 
@@ -45,7 +45,7 @@ export const createUser = async (req, res, next) => {
 
   try {
     const [rows, field] = await UserRepository.createUser(user);
-    console.log(rows);
+    // console.log(rows);
     payload = {
       user: {
         userId: rows.insertId,
@@ -155,7 +155,7 @@ export const loginUser = async (req, res, next) => {
     });
     res.json({ accessToken });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).json({ errors: [{ msg: "Database issue" }] });
   }
 };
@@ -165,7 +165,7 @@ export const getCurrentUser = async (req, res) => {
     const [user, userField] = await UserRepository.getUserById(req.user.userId);
     return res.json(user[0]);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).json({ msg: "Error in /api/auth route" });
   }
 };

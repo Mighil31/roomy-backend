@@ -34,8 +34,8 @@ const isValidConversation = async (message) => {
     const [rows, field] = await ChatRepository.getConversationById(
       message.conversationId
     );
-    console.log("IsvalidConversation");
-    console.log(rows);
+    // console.log("IsvalidConversation");
+    // console.log(rows);
     if (rows.length == 0) return false;
     return true;
   } catch (error) {
@@ -49,7 +49,7 @@ export const createMessage = async (req, res) => {
     content: req.body.content,
     conversationId: req.params.conversationId,
   };
-  console.log(message);
+  // console.log(message);
   if (!(await isValidConversation(message)))
     return res
       .status(400)
@@ -83,7 +83,7 @@ export const getConversationList = async (req, res) => {
     const [rows, field] = await ChatRepository.getConversationList(
       req.user.userId
     );
-    console.log(rows);
+    // console.log(rows);
     return res.status(201).json(rows);
   } catch (error) {
     return res

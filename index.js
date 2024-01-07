@@ -40,6 +40,6 @@ app.use("/api/refresh", Refresh);
 app.use("/api/logout", Logout);
 app.use("/api/chat", Chat);
 
-app.listen(5000, () => {
+server.listen(5000, () => {
   console.log(`App listening on port 5000!`);
 });
