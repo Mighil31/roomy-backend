@@ -38,6 +38,13 @@ class ChatRepository {
   async createMessage(message) {
     return db.query("INSERT INTO messages SET ?", message);
   }
+
+  async getLastMessage(message) {
+    return db.query(
+      "SELECT * FROM messages WHERE messageId= LAST_INSERT_ID();",
+      message
+    );
+  }
 }
 
 export default new ChatRepository();

@@ -50,14 +50,18 @@ export const createMessage = async (req, res) => {
     conversationId: req.params.conversationId,
   };
   // console.log(message);
+  console.log("Adding message " + req.body.content);
   if (!(await isValidConversation(message)))
     return res
       .status(400)
       .json({ errors: [{ msg: "No such conversation exists" }] });
 
   try {
-    const [rows, field] = await ChatRepository.createMessage(message);
-    return res.status(201).json(message);
+    await ChatRepository.createMessage(message);
+    const [rows, field] = await ChatRepository.getLastMessage(message);
+
+    // console.log(rows);
+    return res.status(201).json(rows);
   } catch (error) {
     return res
       .status(500)
