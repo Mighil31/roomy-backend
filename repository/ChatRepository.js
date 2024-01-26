@@ -16,16 +16,29 @@ class ChatRepository {
     ]);
   }
 
+  async getConversationByUserIds(id1, id2) {
+    return db.query(
+      "SELECT * FROM conversations WHERE (user1_id=? and user2_id=?) or (user1_id=? and user2_id = ?)",
+      [id1, id2, id2, id1]
+    );
+  }
+
   async createConversation(conversation) {
     return db.query("INSERT INTO conversations SET ?", conversation);
   }
 
-  async getMessages(conversationId) {
-    return db.query(
-      "SELECT m.messageId, m.content, m.sent_at, u.userId AS senderId, u.name AS sender_username FROM " +
-        "messages m JOIN users u ON m.senderId = u.userId WHERE m.conversationId = ? ORDER BY m.sent_at;",
-      [conversationId]
-    );
+  async getMessages(last, conversationId) {
+    if (last)
+      return db.query(
+        "SELECT * FROM messages NATURAL JOIN conversations WHERE conversationId= ? ORDER BY sent_at DESC LIMIT 1;",
+        conversationId
+      );
+    else
+      return db.query(
+        "SELECT m.messageId, m.content, m.sent_at, u.userId AS senderId, u.name AS sender_username FROM " +
+          "messages m JOIN users u ON m.senderId = u.userId WHERE m.conversationId = ? ORDER BY m.sent_at;",
+        [conversationId]
+      );
   }
 
   async getConversationList(userId) {
@@ -45,6 +58,8 @@ class ChatRepository {
       message
     );
   }
+
+  async getLastMessageFromConversationId(conversationId) {}
 }
 
 export default new ChatRepository();

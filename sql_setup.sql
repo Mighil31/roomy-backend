@@ -25,17 +25,18 @@ CREATE TABLE posts (
   FOREIGN KEY (userId) REFERENCES users(userId)
 );
 
--- Table to store conversations
 CREATE TABLE conversations (
-    conversationId INT PRIMARY KEY AUTO_INCREMENT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  conversationId INT PRIMARY KEY AUTO_INCREMENT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    user1_id INT NOT NULL,
-    user2_id INT NOT NULL,
+  user1_id INT NOT NULL,
+  user2_id INT NOT NULL,
 
-    FOREIGN KEY (user1_id) REFERENCES users(userId),
-    FOREIGN KEY (user2_id) REFERENCES users(userId)
+  FOREIGN KEY (user1_id) REFERENCES users(userId),
+  FOREIGN KEY (user2_id) REFERENCES users(userId)
 );
+
+ALTER TABLE conversations ADD UNIQUE unique_index(user1_id, user2_id);
 
 CREATE TABLE messages (
     messageId INT PRIMARY KEY AUTO_INCREMENT,

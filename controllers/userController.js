@@ -53,7 +53,7 @@ export const createUser = async (req, res, next) => {
     };
 
     const accessToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "500s",
+      expiresIn: "1d",
     });
 
     const refreshToken = jsonwebtoken.sign(
@@ -124,7 +124,7 @@ export const loginUser = async (req, res, next) => {
     };
 
     const accessToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "30s",
+      expiresIn: "1d",
     });
 
     const refreshToken = jsonwebtoken.sign(
