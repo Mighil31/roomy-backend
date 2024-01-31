@@ -5,14 +5,38 @@ class PostRepository {
     return db.query("SELECT * FROM posts");
   }
 
-  async getFeed() {
-    return db.query(
-      "SELECT posts.userId, name, postDate, postId, gender, address1, address2, city,noOfFilledRoommates, state, country, pincode, noOfRoommates, size, rent, postBody FROM posts, users where posts.userId = users.userId"
-    );
+  async getFeed(userId, postId) {
+    let sqlQuery = `
+      SELECT 
+        posts.postId, posts.userId, name, postDate, postId, gender, address1, address2, city, noOfFilledRoommates, state, country, 
+        pincode, noOfRoommates, size, rent, postBody 
+      FROM 
+        posts, users 
+      WHERE 
+        posts.userId = users.userId
+    `;
+
+    if (userId) {
+      sqlQuery += ` AND users.userId = ? `;
+    }
+
+    if (postId) {
+      sqlQuery += ` AND posts.postId = ? `;
+    }
+
+    sqlQuery += ` ORDER BY postDate DESC`;
+
+    return db.query(sqlQuery, userId ? [userId] : postId ? [postId] : []);
   }
 
   async getPostById(id) {
     return db.query("SELECT email, PostId, name FROM Posts WHERE PostId = ?", [
+      id,
+    ]);
+  }
+
+  async getPostByUserId(id) {
+    return db.query("SELECT email, PostId, name FROM Posts WHERE userId = ?", [
       id,
     ]);
   }
@@ -26,11 +50,11 @@ class PostRepository {
   }
 
   async updatePost(id, Post) {
-    return db.query("UPDATE Posts SET ? WHERE id = ?", [Post, id]);
+    return db.query("UPDATE posts SET ? WHERE postId = ?", [Post, id]);
   }
 
   async deletePost(id) {
-    return db.query("DELETE FROM Posts WHERE id = ?", [id]);
+    return db.query("DELETE FROM posts WHERE postId = ?", [id]);
   }
 }
 
