@@ -51,7 +51,7 @@ export const getFeed = async (req, res) => {
     );
 
     // await sleep(5000);
-
+    if (req.query?.postId == null) return res.status(201).json(rows);
     if (req.query?.postId != null && rows.length == 0) {
       return res.status(400).json(rows);
     }
