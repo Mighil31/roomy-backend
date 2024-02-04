@@ -17,7 +17,7 @@ const io = initializeSocket(server);
 
 // CORS
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "35.154.214.36");
+  res.setHeader("Access-Control-Allow-Origin", "http://35.154.214.36");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Credentials", true);
@@ -25,7 +25,7 @@ app.use(function (req, res, next) {
 });
 
 var corsOptions = {
-  origin: "35.154.214.36",
+  origin: "http://35.154.214.36",
   // optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 

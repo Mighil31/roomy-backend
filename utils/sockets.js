@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 const initializeSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "35.154.214.36",
+      origin: "http://35.154.214.36",
       methods: ["GET", "POST"],
     },
   });
